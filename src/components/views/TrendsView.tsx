@@ -151,7 +151,7 @@ export default function TrendsView() {
             </div>
           ) : (
             metrics.slice(0, 2).map((m, i) => (
-              <MetricCard key={i} title={m.title} subtitle={m.subtitle} className={cn(variant === 'V2' && "bg-transparent border-0 shadow-none p-0")}>
+              <MetricCard key={i} title={m.title} subtitle={m.subtitle}>
                 <div className="text-3xl font-bold text-gray-800 my-2">{m.value}</div>
                 <div className="h-16 bg-blue-50/50 rounded flex items-end pb-1 px-1">
                    <div className="w-full h-1/2 bg-blue-200/50 rounded-sm" />
@@ -188,7 +188,7 @@ export default function TrendsView() {
              variant === 'V3' ? "col-span-3 row-span-6" : ""
           )}>
             {metrics.slice(2, 4).map((m, i) => (
-              <MetricCard key={i} title={m.title} subtitle={m.subtitle} className={cn(variant === 'V2' && "bg-transparent border-0 shadow-none p-0")}>
+              <MetricCard key={i} title={m.title} subtitle={m.subtitle}>
                 <div className="flex justify-between items-end">
                   <div className="text-3xl font-bold text-gray-800">{m.value}</div>
                   <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded mb-1">{m.change}</span>
