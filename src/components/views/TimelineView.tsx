@@ -9,7 +9,8 @@ export default function TimelineView() {
 
   return (
     <div className={cn(
-      "flex flex-col v-gap v-padding h-full overflow-hidden",
+      "flex flex-col v-gap h-full overflow-hidden",
+      variant === 'V1' ? "" : "v-padding",
       variant === 'V4' ? "bg-gray-50/30" : "",
       variant === 'V6' ? "text-white" : ""
     )}>

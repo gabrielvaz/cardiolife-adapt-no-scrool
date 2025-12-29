@@ -25,18 +25,30 @@ export default function TableView() {
       variant === 'V4' ? "bg-gray-50/30" : "",
       variant === 'V6' ? "text-white" : ""
     )}>
-      {/* V4/V6/V7 ECG Strip at top */}
-      {['V4', 'V6', 'V7', 'V8', 'V9', 'V10'].includes(variant) && (
-        <ECGStrip height={180} className={cn("shrink-0", variant === 'V4' ? "border-b border-gray-100 bg-white" : (['V7', 'V8', 'V9', 'V10'].includes(variant) ? "border border-gray-100 rounded bg-white shadow-sm" : "border-b border-white/10 bg-transparent"))} dark={variant === 'V6'} />
+      {/* ECG Strip at top (Except V4 which has it at the bottom) */}
+      {['V6', 'V7', 'V8', 'V9', 'V10'].includes(variant) && (
+        <ECGStrip height={180} className={cn("shrink-0", (['V7', 'V8', 'V9', 'V10'].includes(variant) ? "border border-gray-100 rounded bg-white shadow-sm" : "border-b border-white/10 bg-transparent"))} dark={variant === 'V6'} />
+      )}
+      {variant === 'V4' && (
+        <div className="flex-1 flex flex-col min-h-0">
+           <div className="flex-none h-1/3 bg-white border border-gray-100 rounded shadow-sm overflow-hidden mb-4">
+              {/* Table section for V4 top */}
+              <div className="h-full overflow-auto">
+                 <TableContent variant={variant} data={data} />
+              </div>
+           </div>
+           <ECGStrip height={500} className="flex-1 border border-gray-100 rounded bg-white shadow-sm" />
+        </div>
       )}
 
       <div className={cn(
         "flex v-gap flex-1 min-h-0",
-        ['V4', 'V6', 'V7', 'V8', 'V9', 'V10'].includes(variant) ? "flex-col overflow-hidden" : "flex-row"
+        variant === 'V4' ? "hidden" : (['V6', 'V7', 'V8', 'V9', 'V10'].includes(variant) ? "flex-col overflow-hidden" : "flex-row")
       )}>
         {/* Left Table Section */}
         <div className={cn(
-          "flex-1 flex flex-col overflow-hidden",
+          variant === 'V1' ? "w-1/3" : "flex-1",
+          "flex flex-col overflow-hidden",
           variant === 'V2' ? "bg-transparent border-r border-gray-100 rounded-none pr-4" : 
             "bg-white border border-gray-100 rounded shadow-sm"
         )}>
@@ -98,37 +110,17 @@ export default function TableView() {
                  </tbody>
               </table>
             ) : (
-              // Standard Table
-              <table className="w-full text-xs text-left">
-                <thead className="text-[10px] font-bold text-gray-400 uppercase sticky top-0 bg-[#f8f9fa] border-b border-gray-100">
-                  <tr>
-                     <th className="px-4 py-2">Time</th>
-                     <th className="px-4 py-2">Label</th>
-                     <th className="px-4 py-2">HR (bpm)</th>
-                     <th className="px-4 py-2">RR (ms)</th>
-                     <th className="px-4 py-2">ST (mm)</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {Array.from({length: 50}).map((_, i) => (
-                    <tr key={i} className={cn("cursor-pointer hover:bg-gray-50", i === 1 ? "bg-blue-50/50" : "")}>
-                      <td className="px-4 py-2 font-medium text-gray-600">08:10:04</td>
-                      <td className="px-4 py-2"><span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-600 font-bold text-[8px]">N</span></td>
-                      <td className="px-4 py-2 font-bold text-gray-700">72</td>
-                      <td className="px-4 py-2 text-gray-500">833</td>
-                      <td className="px-4 py-2 text-gray-500">0.0</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              // Standard Table Component extracted
+              <TableContent variant={variant} data={data} />
             )}
           </div>
         </div>
 
         {/* Right Strip Section for Non-V4 */}
-        {variant !== 'V4' && variant !== 'V6' && variant !== 'V7' && variant !== 'V8' && variant !== 'V9' && variant !== 'V10' && (
+        {!['V4', 'V6', 'V7', 'V8', 'V9', 'V10'].includes(variant) && (
           <div className={cn(
-            "w-1/2 flex flex-col overflow-hidden",
+            variant === 'V1' ? "w-2/3" : "w-1/2",
+            "flex flex-col overflow-hidden",
             variant === 'V2' ? "bg-transparent pl-4 rounded-none" : "bg-white border border-gray-100 rounded shadow-sm"
           )}>
             <ECGStrip height={600} className="flex-1" />
@@ -138,3 +130,33 @@ export default function TableView() {
     </div>
   );
 }
+
+function TableContent({ variant, data }: { variant: string, data: any[] }) {
+  const rowCount = variant === 'V2' ? 7 : 50; // Requested 7 items for V2, keeping more for others as scrollable
+  
+  return (
+    <table className="w-full text-xs text-left table-fixed">
+      <thead className="text-[10px] font-bold text-gray-400 uppercase sticky top-0 bg-[#f8f9fa] border-b border-gray-100">
+        <tr>
+           <th className="px-2 py-2 w-20">Time</th>
+           <th className="px-2 py-2 w-12">Label</th>
+           <th className="px-2 py-2 w-16 text-right">HR</th>
+           <th className="px-2 py-2 w-16 text-right">RR</th>
+           <th className="px-2 py-2 w-16 text-right">ST</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-gray-50">
+        {Array.from({length: rowCount}).map((_, i) => (
+          <tr key={i} className={cn("cursor-pointer hover:bg-gray-50", i === 1 ? "bg-blue-50/50" : "", variant === 'V2' ? "h-8" : "h-10")}>
+            <td className="px-2 py-1 font-medium text-gray-600 truncate">08:10:04</td>
+            <td className="px-2 py-1"><span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 font-bold text-[8px]">N</span></td>
+            <td className="px-2 py-1 font-bold text-gray-700 text-right">72</td>
+            <td className="px-2 py-1 text-gray-500 text-right">833</td>
+            <td className="px-2 py-1 text-gray-500 text-right">0.0</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+

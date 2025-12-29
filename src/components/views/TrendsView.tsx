@@ -129,19 +129,36 @@ export default function TrendsView() {
         "flex-1 justify-items-center",
         variant === 'V3' ? "grid grid-cols-12 grid-rows-6 v-gap" : "flex flex-col v-gap"
       )}>
-        {/* Left Column */}
+        {/* Main Content Area */}
         <div className={cn(
            "flex flex-col v-gap",
-           variant === 'V3' ? "col-span-3 row-span-6" : ""
+           variant === 'V3' ? "col-span-3 row-span-6" : "flex-1"
         )}>
-          {metrics.slice(0, 2).map((m, i) => (
-            <MetricCard key={i} title={m.title} subtitle={m.subtitle} className={cn(variant === 'V2' && "bg-transparent border-0 shadow-none p-0")}>
-              <div className="text-3xl font-bold text-gray-800 my-2">{m.value}</div>
-              <div className="h-16 bg-blue-50/50 rounded flex items-end pb-1 px-1">
-                 <div className="w-full h-1/2 bg-blue-200/50 rounded-sm" />
-              </div>
-            </MetricCard>
-          ))}
+          {/* Top Metrics Row (Horizontal for V1/V2) */}
+          {(variant === 'V1' || variant === 'V2') ? (
+            <div className="grid grid-cols-3 gap-4">
+              {metrics.slice(0, 3).map((m, i) => (
+                <MetricCard key={i} title={m.title} subtitle={m.subtitle} className={cn(variant === 'V2' && "bg-transparent border-0 shadow-none p-0")}>
+                  <div className="flex justify-between items-end">
+                    <div className="text-3xl font-bold text-gray-800 my-2">{m.value}</div>
+                    {i === 2 && <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded mb-1">{m.change}</span>}
+                  </div>
+                  <div className="h-12 bg-blue-50/50 rounded flex items-end pb-1 px-1">
+                     <div className="w-full h-1/2 bg-blue-200/50 rounded-sm" />
+                  </div>
+                </MetricCard>
+              ))}
+            </div>
+          ) : (
+            metrics.slice(0, 2).map((m, i) => (
+              <MetricCard key={i} title={m.title} subtitle={m.subtitle} className={cn(variant === 'V2' && "bg-transparent border-0 shadow-none p-0")}>
+                <div className="text-3xl font-bold text-gray-800 my-2">{m.value}</div>
+                <div className="h-16 bg-blue-50/50 rounded flex items-end pb-1 px-1">
+                   <div className="w-full h-1/2 bg-blue-200/50 rounded-sm" />
+                </div>
+              </MetricCard>
+            ))
+          )}
         </div>
 
         {/* Center */}
@@ -164,22 +181,25 @@ export default function TrendsView() {
            </div>
         </div>
 
-        {/* Right */}
-        <div className={cn(
-           "flex flex-col v-gap",
-           variant === 'V3' ? "col-span-3 row-span-6" : ""
-        )}>
-          {metrics.slice(2, 4).map((m, i) => (
-            <MetricCard key={i} title={m.title} subtitle={m.subtitle} className={cn(variant === 'V2' && "bg-transparent border-0 shadow-none p-0")}>
-              <div className="flex justify-between items-end">
-                <div className="text-3xl font-bold text-gray-800">{m.value}</div>
-                <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded mb-1">{m.change}</span>
-              </div>
-            </MetricCard>
-          ))}
-        </div>
+        {/* Hidden Right Column for V1/V2 to give space to center/expanded layout */}
+        {variant !== 'V1' && variant !== 'V2' && (
+          <div className={cn(
+             "flex flex-col v-gap",
+             variant === 'V3' ? "col-span-3 row-span-6" : ""
+          )}>
+            {metrics.slice(2, 4).map((m, i) => (
+              <MetricCard key={i} title={m.title} subtitle={m.subtitle} className={cn(variant === 'V2' && "bg-transparent border-0 shadow-none p-0")}>
+                <div className="flex justify-between items-end">
+                  <div className="text-3xl font-bold text-gray-800">{m.value}</div>
+                  <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded mb-1">{m.change}</span>
+                </div>
+              </MetricCard>
+            ))}
+          </div>
+        )}
       </div>
-      <ECGStrip height={150} className="shrink-0" />
+      {/* Bottom Strip Area - Expanded for V1/V2 */}
+      <ECGStrip height={variant === 'V1' || variant === 'V2' ? 250 : 150} className="shrink-0" />
     </div>
   );
 }

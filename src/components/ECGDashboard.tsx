@@ -36,68 +36,23 @@ export default function ECGDashboard({ initialTab }: { initialTab?: TabId }) {
       case 'templates': return <TemplatesView />;
       case 'table': return <TableView />;
       case 'report': return <ReportView />;
-      case 'annotations': return <div className="p-10 text-center text-gray-400">Annotations view coming soon...</div>;
       default: return <TrendsView />;
     }
   };
 
   return (
     <div className={cn(
-      "flex-1 flex overflow-hidden bg-[#f4f6f8]",
-      variant === 'V5' ? "flex-row" : "flex-col"
+      "flex-1 flex overflow-hidden bg-[#f4f6f8] flex-col"
     )}>
-      {/* V5 Sidebar */}
-      {variant === 'V5' && (
-        <aside className="w-56 bg-white border-r border-gray-200 text-gray-800 flex flex-col shrink-0">
-          <div className="p-6 border-b border-gray-100">
-            <h1 className="text-xl font-bold text-gray-900 mb-1">Andrea Matias</h1>
-            <p className="text-[10px] text-gray-400">ID: 31235674 • 46y • Male</p>
-          </div>
-          
-          <nav className="flex-1 flex flex-col py-4 px-2 gap-1">
-             {[
-               { id: 'trends', label: 'Dashboard Trends' },
-               { id: 'events', label: 'Clinical Events' },
-               { id: 'timeline', label: 'Full Disclosure' },
-               { id: 'templates', label: 'Beat Templates' },
-               { id: 'table', label: 'Tabular Data' },
-               { id: 'report', label: 'Medical Report' },
-             ].map((tab) => (
-               <button
-                 key={tab.id}
-                 onClick={() => handleTabChange(tab.id as TabId)}
-                 className={cn(
-                   "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left",
-                   activeTab === tab.id 
-                     ? "bg-[#ff8a00] text-white shadow-lg shadow-orange-900/20" 
-                     : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                 )}
-               >
-                 {tab.label}
-               </button>
-             ))}
-          </nav>
+      {/* Sidebar (Only V7/V8/V9/V10 removed, V5 removed as per request) */}
+      {/* V5 Sidebar is being removed and replaced by top tabs */}
 
-          <div className="p-6 border-t border-gray-100 mt-auto">
-             <div className="flex flex-col gap-2">
-                <div className="flex justify-between text-[10px] text-gray-400 uppercase font-bold">
-                   <span>Exam ID</span>
-                   <span className="text-gray-700">2253145</span>
-                </div>
-                <div className="flex justify-between text-[10px] text-gray-400 uppercase font-bold">
-                   <span>Duration</span>
-                   <span className="text-gray-700">85h 57m</span>
-                </div>
-             </div>
-          </div>
-        </aside>
-      )}
 
       {/* Main Content Wrapper */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0 relative">
         
-        {/* Standard Header (V1-V4 Only) */}
-        {!['V5', 'V6', 'V7', 'V8', 'V9', 'V10'].includes(variant) && (
+        {/* Standard Header (V1-V4, V5, V10) */}
+        {(!['V6', 'V7', 'V8', 'V9'].includes(variant) || variant === 'V5' || variant === 'V10') && (
           <>
             <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-100">
               <div className="flex items-center gap-4">
@@ -243,20 +198,7 @@ export default function ECGDashboard({ initialTab }: { initialTab?: TabId }) {
            </div>
         )}
 
-        {/* V10 Data-Left Shell */}
-        {variant === 'V10' && (
-           <div className="flex-1 flex overflow-hidden bg-white">
-              <aside className="w-64 border-r border-gray-100 bg-[#fbfbfb] flex flex-col shrink-0 overflow-hidden">
-                 <div className="p-6 border-b border-gray-100"><h1 className="text-xl font-black tracking-tighter text-gray-900 mb-1">CARDIOLIFE</h1></div>
-                 <div className="p-6 flex-1 overflow-y-auto">
-                    <div className="bg-white p-4 rounded-lg border border-gray-100 mb-6"><h4 className="text-xs font-bold text-gray-900">Andrea Matias</h4></div>
-                    <div className="flex flex-col gap-1">
-                       {['trends', 'events', 'timeline', 'report'].map((id) => (
-                          <button key={id} onClick={() => handleTabChange(id as TabId)} className={cn("flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-bold transition-all text-left uppercase tracking-wide", activeTab === id ? "bg-gray-900 text-white shadow-lg shadow-gray-200 translate-x-2" : "text-gray-500 hover:bg-white hover:text-gray-900 hover:shadow-sm")}>{id}</button>
-                       ))}
-                    </div>
-                 </div>
-              </aside>
+              {/* V10 Sidebar removed and replaced by top tabs */}
               <div className="flex-1 flex flex-col min-w-0">
                  <div className="flex-1 overflow-hidden relative">{renderActiveTab()}</div>
               </div>

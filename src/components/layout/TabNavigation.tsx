@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
-export type TabId = 'trends' | 'events' | 'timeline' | 'templates' | 'table' | 'report' | 'annotations';
+export type TabId = 'trends' | 'events' | 'timeline' | 'templates' | 'table' | 'report';
 
 interface Tab {
   id: TabId;
@@ -17,7 +17,6 @@ const TABS: Tab[] = [
   { id: 'templates', label: 'Templates' },
   { id: 'table', label: 'Table' },
   { id: 'report', label: 'Report' },
-  { id: 'annotations', label: 'Annotations' },
 ];
 
 interface TabNavigationProps {
