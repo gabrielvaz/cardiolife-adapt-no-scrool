@@ -198,15 +198,10 @@ export default function ECGDashboard({ initialTab }: { initialTab?: TabId }) {
            </div>
         )}
 
-              {/* V10 Sidebar removed and replaced by top tabs */}
-              <div className="flex-1 flex flex-col min-w-0">
-                 <div className="flex-1 overflow-hidden relative">{renderActiveTab()}</div>
-              </div>
-           </div>
-        )}
 
-        {/* Standard View (V1-V4) & V5 Content */}
-        {!['V6', 'V7', 'V8', 'V9', 'V10'].includes(variant) && (
+
+        {/* Standard View (V1-V5, V10) & V5 Content */}
+        {!['V6', 'V7', 'V8', 'V9'].includes(variant) && (
             <div className="flex-1 flex flex-col overflow-hidden min-w-0 bg-white relative">
                {variant === 'V5' && (
                   <div className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 shadow-sm">
